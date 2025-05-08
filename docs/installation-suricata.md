@@ -3,96 +3,94 @@
 **Expliquant l'installation de Suricata**
 
 
-Voici une procédure pas à pas, avec commentaires, pour installer Suricata (mode IDS/IPS) sur Ubuntu/Debian, ajouter le dépôt PPA, installer les paquets `suricata` et `suricata-update`, puis importer vos règles :
+**Ajout de Windows aux instructions**
 
----
 
-## 1. Ajouter le PPA officiel de Suricata
+Voici la procédure pour **Windows** en plus de celle pour **Debian/Ubuntu**.
+
+
+## 1. Sous Debian/Ubuntu
 
 ```bash
-# Mettre à jour la liste des paquets
+# 1.1 Mettre à jour et ajouter le PPA
 sudo apt-get update
-
-# Installer l'outil pour gérer les dépôts tiers
 sudo apt-get install -y software-properties-common
-
-# Ajouter le PPA "oisf/suricata-stable" pour toujours avoir la version stable la plus récente
 sudo add-apt-repository ppa:oisf/suricata-stable -y
-
-# Rafraîchir à nouveau la liste des paquets pour inclure le nouveau PPA
 sudo apt-get update
-```
 
----
-
-## 2. Installer Suricata et l’outil de mise à jour de règles
-
-```bash
-# Installer Suricata (le moteur IDS/IPS) et suricata-update (gestionnaire de règles)
+# 1.2 Installer Suricata et suricata-update
 sudo apt-get install -y suricata suricata-update
+suricata --version
+suricata-update --version
 
-# Vérifier les versions installées
-suricata --version        # doit afficher la version de Suricata
-suricata-update --version # doit afficher la version de suricata-update
+# 1.3 Configurer et importer les règles
+suricata-update list-sources
+suricata-update enable-source et/open
+suricata-update update
+suricata-update build
+ls /etc/suricata/rules/*.rules
+
+# 1.4 Tester la conf
+sudo suricata -T -c /etc/suricata/suricata.yaml
 ```
 
 ---
 
-## 3. Configurer et importer vos règles
+## 2. Sous Windows (10/11 ou Server 2016+)
 
-Suricata‑update simplifie la récupération et la génération des règles au format natif de Suricata.
+### 2.1 Prérequis
 
-```bash
-# 3.1 Lister les sources de règles disponibles
-suricata-update list-sources
-# → Exemples : et/open, et/community, oisf, snort, ...
+* Compte Administrateur / PowerShell en mode Administrateur
+* (Optionnel) [Chocolatey](https://chocolatey.org/install)
 
-# 3.2 Activer la source Emerging Threats Open (gratuit)
+### 2.2 Installer Suricata
+
+**Via Chocolatey**
+
+```powershell
+choco install suricata -y
+```
+
+**Ou manuellement**
+
+1. Télécharger l’installeur MSI Windows depuis :
+   [https://www.openinfosecfoundation.org/download/](https://www.openinfosecfoundation.org/download/) (section “Windows Binaries”)
+2. Lancer le `.msi` et suivre l’assistant (par défaut dans `C:\Program Files\Suricata`).
+
+### 2.3 Installer suricata-update
+
+1. Installer **Python 3.8+** depuis python.org ou le Microsoft Store.
+2. Vérifier que `python --version` renvoie bien la version installée.
+3. Installer suricata-update via pip :
+
+   ```powershell
+   pip install suricata-update
+   ```
+4. S’assurer que le dossier `…\Python3x\Scripts` est dans votre **PATH** pour invoquer `suricata-update`.
+
+### 2.4 Importer et générer les règles
+
+```powershell
+# Activer Emerging Threats Open
 suricata-update enable-source et/open
 
-# 3.3 (Optionnel) Désactiver les autres sources si non souhaitées
-# suricata-update disable-source et/community
-
-# 3.4 Mettre à jour la base des règles (téléchargement + génération)
+# Télécharger et construire
 suricata-update update
-
-# 3.5 Reconstruire les fichiers de règles pour Suricata
 suricata-update build
 
-# 3.6 Vérifier que les fichiers .rules ont bien été générés
-ls /etc/suricata/rules/*.rules
+# Vérifier que les *.rules sont présents
+dir "C:\Program Files\Suricata\rules\*.rules"
+```
+
+> **Note** : par défaut, suricata-update va déposer les règles dans `C:\Program Files\Suricata\rules`.
+
+### 2.5 Tester la configuration
+
+```powershell
+# Test de la config principale
+& "C:\Program Files\Suricata\suricata.exe" -T -c "C:\Program Files\Suricata\suricata.yaml"
 ```
 
 ---
 
-## 4. Tester la configuration et les règles
-
-```bash
-# Tester votre fichier de conf principal avec règles incluses
-sudo suricata -T -c /etc/suricata/suricata.yaml
-
-# Si tout est OK, vous devriez voir "Configuration appears to be OK"
-```
-
----
-
-### Explications
-
-* **software-properties-common**
-  Fournit `add-apt-repository` pour ajouter facilement des PPA.
-
-* **ppa\:oisf/suricata-stable**
-  PPA maintenu par la communauté OISF pour distribuer les dernières versions stable de Suricata.
-
-* **suricata-update**
-  Outil Python qui gère vos sources de règles (Emerging Threats, OISF, etc.), télécharge les dernières règles, les convertit au format Suricata, et les place dans `/etc/suricata/rules/`.
-
-* **enable-source / disable-source**
-  Pour choisir quelles collections de règles vous voulez activer (par exemple `et/open` pour Emerging Threats Open).
-
-* **update + build**
-  `update` télécharge les règles, `build` génère les fichiers `.rules` finaux.
-
----
-
-Vous avez maintenant Suricata installé, vos règles à jour, et vous pouvez démarrer Suricata en mode IDS ou IPS selon votre configuration. N’hésitez pas si vous souhaitez approfondir la configuration syslog, EVE JSON ou le mode inline !
+Vous avez désormais, côte‑à‑côte, les instructions pour installer Suricata et suricata-update **sur Linux** et **sur Windows**, ainsi que pour importer et tester vos règles.
