@@ -131,7 +131,7 @@ iptables -I OUTPUT  -j NFQUEUE --queue-num 0
 
 ---
 
-⚙️ **Conseils**
+ **Conseils**
 
 1. **Tester la config** avant passage en production :
 
