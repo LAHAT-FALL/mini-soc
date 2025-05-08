@@ -1,7 +1,5 @@
 **Explication de suricata-ids.yaml**
 
-L'utilisateur semble demander des explications détaillées sur chaque section du fichier de configuration `suricata-ids.yaml`. Bien que l'utilisateur n'ait pas fourni le fichier complet, ce fichier devrait être une version modifiée de la configuration par défaut `suricata.yaml`. Je vais donc présenter chaque section par section, comme "vars", "logging", "outputs", "detection", et autres. Je préciserai ce que chaque section représente, ses options typiques et leurs valeurs par défaut, tout en évitant la recherche puisque ce fichier est bien connu.
-
 **Organisation de la réponse sur le fichier `suricata-ids.yaml`**
 
 Je vais structurer l'explication en utilisant des titres en *markdown* pour chaque section importante du fichier. L'utilisateur apprécie les détails techniques et pratiques, alors je vais couvrir des aspects comme :
@@ -275,4 +273,4 @@ eve-log:
   suricata -T -c /etc/suricata/suricata-ids.yaml
   ```
 
-Avec cette vue détaillée, vous pouvez ajuster chaque section pour optimiser Suricata en fonction de votre environnement et de vos objectifs (IDS pur, mode inline IPS, intégration SIEM, etc.). N’hésitez pas si vous souhaitez approfondir une section ou voir des exemples concrets de paramètres avancés !
+Avec cette vue détaillée, vous pouvez ajuster chaque section pour optimiser Suricata en fonction de votre environnement et de vos objectifs (IDS pur, mode inline IPS, intégration SIEM, etc.).
