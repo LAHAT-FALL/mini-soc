@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  evebox:
+    image: jasonish/evebox:latest
+    container_name: evebox
+    ports:
+      - "5636:5636"
+    volumes:
+      - ../suricata/ids:/var/log/suricata:ro
+      - ./data:/data
+    command: >
+      evebox server
+      -D /data
+      --datastore sqlite
+      --input /var/log/suricata/eve.json

@@ -1,0 +1,20 @@
+%YAML 1.1
+---
+run-mode: auto
+af-packet:
+  - interface: wlp3s0
+    cluster-id: 99
+    cluster-type: cluster_flow
+    defrag: yes
+    use-mmap: yes
+    tpacket-v3: yes
+default-log-dir: /var/log/suricata/ids
+default-rule-path: /etc/suricata/rules
+rule-files: [ emerging.rules ]
+outputs:
+  - fast: { enabled: yes }
+  - eve-log:
+      enabled: yes
+      filetype: regular
+      filename: eve.json
+      types: [ alert ]

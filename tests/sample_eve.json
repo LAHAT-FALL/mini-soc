@@ -1,0 +1,1 @@
+{"timestamp":"2025-05-05T07:13:02.993580Z","alert":{"signature":"TEST SYN scan","signature_id":1000001},"src_ip":"192.168.2.16","dest_ip":"192.168.2.30","event_type":"alert"}
