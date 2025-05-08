@@ -1,20 +1,31 @@
 %YAML 1.1
 ---
+#=== Mode de fonctionnement ===#
 run-mode: auto
+# Suricata détecte automatiquement la meilleure méthode de capture
+# (af-packet sous Linux, pcap, nfqueue, etc.).
+
+#=== Section af-packet (Linux high‑perf capture) ===#
 af-packet:
-  - interface: wlp3s0
-    cluster-id: 99
-    cluster-type: cluster_flow
-    defrag: yes
-    use-mmap: yes
-    tpacket-v3: yes
-default-log-dir: /var/log/suricata/ids
-default-rule-path: /etc/suricata/rules
-rule-files: [ emerging.rules ]
+  - interface: wlp3s0            # Nom de l’interface à écouter (ici votre carte Wi‑Fi)
+    cluster-id: 99               # ID utilisé pour grouper les threads de capture
+    cluster-type: cluster_flow   # Répartit chaque flux TCP sur le même thread pour conserver l’ordre
+    defrag: yes                  # Active le défiaçage IP (reconstruction des paquets fragmentés)
+    use-mmap: yes                # Utilise mmap pour accéder plus efficacement au buffer
+    tpacket-v3: yes              # Emploie la version 3 de TP_PACKET pour de meilleures performances
+
+#=== Répertoires par défaut ===#
+default-log-dir: /var/log/suricata/ids     # Où seront écrits les logs IDS (fast.log, eve.json…)
+default-rule-path: /etc/suricata/rules     # Dossier contenant vos fichiers de règles
+
+#=== Fichiers de règles à charger ===#
+rule-files: [ emerging.rules ]             # Charge le fichier emerging.rules (Emerging Threats Open)
+
+#=== Modules de sortie d’événements ===#
 outputs:
-  - fast: { enabled: yes }
+  - fast: { enabled: yes }                 # Active le "fast log" (texte simple, un événement par ligne)
   - eve-log:
       enabled: yes
-      filetype: regular
-      filename: eve.json
-      types: [ alert ]
+      filetype: regular                    # Sortie dans un fichier (pas socket ni stdout)
+      filename: eve.json                   # Nom du fichier JSON généré
+      types: [ alert ]                     # N’exporte que les événements de type 'alert'
