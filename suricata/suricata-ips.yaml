@@ -1,18 +1,26 @@
 %YAML 1.1
 ---
+#=== Mode de capture inline (IPS) via Netfilter NFQUEUE ===#
 run-mode: nfqueue
+
 nfqueue:
-  - id: 0
-    bypass: no
-    fail-open: yes
-    batch-size: 512
-default-log-dir: /var/log/suricata/ips
-default-rule-path: /etc/suricata/rules
-rule-files: [ emerging.rules ]
+  - id: 0            # Numéro de la queue Netfilter (iptables ‑j NFQUEUE --queue-num 0)
+    bypass: no       # Si la queue est pleine, ne pas contourner Suricata (bloque le trafic)
+    fail-open: yes   # Si Suricata plante ou redémarre, laisse passer tout le trafic
+    batch-size: 512  # Nombre maximal de paquets lus en une seule fois
+
+#=== Répertoires par défaut ===#
+default-log-dir: /var/log/suricata/ips    # Où Suricata écrit ses logs IPS (fast.log, eve.json…)
+default-rule-path: /etc/suricata/rules    # Où sont stockées vos règles .rules
+
+#=== Chargement des règles ===#
+rule-files: [ emerging.rules ]            # Fichier de règles à charger (ici Emerging Threats Open)
+
+#=== Modules de sortie d’événements ===#
 outputs:
-  - fast: { enabled: yes }
+  - fast: { enabled: yes }                # Active le “fast log” (une ligne texte par alerte)
   - eve-log:
       enabled: yes
-      filetype: regular
-      filename: eve.json
-      types: [ alert ]
+      filetype: regular                   # Écriture dans un fichier (pas socket/syslog)
+      filename: eve.json                  # Nom du fichier JSON créé
+      types: [ alert ]                    # N’inclut que les événements de type “alert”
