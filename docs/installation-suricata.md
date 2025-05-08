@@ -93,4 +93,4 @@ dir "C:\Program Files\Suricata\rules\*.rules"
 
 ---
 
-Vous avez désormais, côte‑à‑côte, les instructions pour installer Suricata et suricata-update **sur Linux** et **sur Windows**, ainsi que pour importer et tester vos règles.
+Vous avez désormais, côte‑à‑côte, les instructions pour installer Suricata et suricata-update **sur Linux** et **sur Windows**.
